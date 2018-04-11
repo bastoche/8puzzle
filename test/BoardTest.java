@@ -4,13 +4,27 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
 
-    Board makeBoard(int size) {
-        return new Board(new int[size][size]);
+    Board makeEmptyBoard(int size) {
+        int[] elements = {};
+        return makeBoard(size, elements);
+    }
+
+    Board makeGoalBoard() {
+        int[] elements = {1, 2, 3, 4, 5, 6, 7, 8};
+        return makeBoard(3, elements);
+    }
+
+    Board makeBoard(int size, int[] elements) {
+        int[][] blocks = new int[size][size];
+        for (int i = 0; i < elements.length; ++i) {
+            blocks[i / 3][i % 3] = elements[i];
+        }
+        return new Board(blocks);
     }
 
     @Test
     void output() {
-        Board board = makeBoard(3);
+        Board board = makeEmptyBoard(3);
         assertEquals("3\n" +
                 " 0  0  0 \n" +
                 " 0  0  0 \n" +
@@ -19,37 +33,28 @@ class BoardTest {
 
     @Test
     void dimension() {
-        Board board = makeBoard(3);
+        Board board = makeEmptyBoard(3);
         assertEquals(3, board.dimension());
     }
 
 
     @Test
     void isGoal__false() {
-        Board board = makeBoard(3);
+        Board board = makeEmptyBoard(3);
         assertFalse(board.isGoal());
     }
 
     @Test
     void isGoal__true() {
-        int[][] blocks = new int[3][3];
-        blocks[0][0] = 1;
-        blocks[0][1] = 2;
-        blocks[0][2] = 3;
-        blocks[1][0] = 4;
-        blocks[1][1] = 5;
-        blocks[1][2] = 6;
-        blocks[2][0] = 7;
-        blocks[2][1] = 8;
-        Board board = new Board(blocks);
+        Board board = makeGoalBoard();
         assertTrue(board.isGoal());
     }
 
     @Test
     void equals__false() {
-        Board board = makeBoard(3);
+        Board board = makeEmptyBoard(3);
         assertFalse(board.equals(null));
-        assertFalse(board.equals(makeBoard(2)));
+        assertFalse(board.equals(makeEmptyBoard(2)));
         int[][] otherBlocks = new int[3][3];
         otherBlocks[0][0] = 3;
         assertFalse(board.equals(new Board(otherBlocks)));
@@ -57,9 +62,17 @@ class BoardTest {
 
     @Test
     void equals__true() {
-        Board board = makeBoard(3);
-        assertFalse(board.equals(makeBoard(3)));
+        Board board = makeEmptyBoard(3);
+        assertFalse(board.equals(makeEmptyBoard(3)));
     }
 
+    @Test
+    void hamming() {
+        assertEquals(0, makeGoalBoard().hamming());
+
+        int[] elements = {8, 1, 3, 4, 0, 2, 7, 6, 5};
+        Board board = makeBoard(3, elements);
+        assertEquals(5, board.hamming());
+    }
 
 }

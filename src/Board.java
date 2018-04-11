@@ -19,20 +19,36 @@ public class Board {
         return size;
     }
 
-    //    public int hamming()                   // number of blocks out of place
+    public int hamming() {
+        int result = 0;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (blocks[i][j] != 0 && blocks[i][j] != goalValue(i, j)) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
 //    public int manhattan()                 // sum of Manhattan distances between blocks and goal
 
     public boolean isGoal() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                if (i == size - 1 && j == size - 1) {
-                    return blocks[i][j] == 0;
-                } else if (blocks[i][j] != 1 + size * i + j) {
+                if (blocks[i][j] != goalValue(i, j)) {
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    private int goalValue(int i, int j) {
+        if (i == size - 1 && j == size - 1) {
+            return 0;
+        }
+        return 1 + size * i + j;
     }
 
 //    public Board twin()                    // a board that is obtained by exchanging any pair of blocks
