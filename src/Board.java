@@ -6,6 +6,8 @@ public class Board {
     private final int size;
     private final int[][] blocks;
 
+    private int manhattan = -1;
+
     public Board(int[][] blocks) {
         size = blocks.length;
         this.blocks = new int[size][size];
@@ -37,15 +39,19 @@ public class Board {
     }
 
     public int manhattan() {
-        int result = 0;
+        if (manhattan != -1) {
+            return manhattan;
+        }
+
+        manhattan = 0;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (blocks[i][j] != 0) {
-                    result += manhattan(blocks[i][j], i, j);
+                    manhattan += manhattan(blocks[i][j], i, j);
                 }
             }
         }
-        return result;
+        return manhattan;
     }
 
     private int manhattan(int value, int i, int j) {

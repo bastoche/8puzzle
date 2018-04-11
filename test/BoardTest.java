@@ -6,21 +6,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
 
-    Board makeEmptyBoard() {
+    public static Board makeEmptyBoard() {
         return makeEmptyBoard(3);
     }
 
-    Board makeEmptyBoard(int size) {
+    public static Board makeEmptyBoard(int size) {
         int[] elements = {};
         return makeBoard(size, elements);
     }
 
-    Board makeGoalBoard() {
+    public static Board makeGoalBoard() {
         int[] elements = {1, 2, 3, 4, 5, 6, 7, 8};
         return makeBoard(3, elements);
     }
 
-    Board makeBoard(int size, int[] elements) {
+    public static Board makeBoard(int size, int[] elements) {
         int[][] blocks = new int[size][size];
         for (int i = 0; i < elements.length; ++i) {
             blocks[i / 3][i % 3] = elements[i];
@@ -98,23 +98,13 @@ class BoardTest {
         assertFalse(board.twin().isGoal());
     }
 
-    private static <T> int size(Iterable<T> iterable) {
-        int count = 0;
-        Iterator iterator = iterable.iterator();
-        while (iterator.hasNext()) {
-            iterator.next();
-            count++;
-        }
-        return count;
-    }
-
     @Test
     void neighbors() {
-        assertEquals(2, size(makeGoalBoard().neighbors()));
+        assertEquals(2, IterableUtils.size(makeGoalBoard().neighbors()));
 
         int[] elements = {1, 2, 3, 4, 0, 5, 6, 7, 8};
         Board board = makeBoard(3, elements);
-        assertEquals(4, size(board.neighbors()));
+        assertEquals(4, IterableUtils.size(board.neighbors()));
     }
 
 }
