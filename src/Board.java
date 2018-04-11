@@ -9,10 +9,13 @@ public class Board {
     public Board(int[][] blocks) {
         size = blocks.length;
         this.blocks = new int[size][size];
+        copy(blocks, this.blocks, size);
+    }
 
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                this.blocks[i][j] = blocks[i][j];
+    private void copy(int[][] input, int[][] output, int length) {
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                output[i][j] = input[i][j];
             }
         }
     }
@@ -69,7 +72,23 @@ public class Board {
         return 1 + size * i + j;
     }
 
-//    public Board twin()                    // a board that is obtained by exchanging any pair of blocks
+    public Board twin() {
+        int[][] twinBlocks = new int[size][size];
+        copy(blocks, twinBlocks, size);
+        if (blocks[0][0] != 0 && blocks[0][1] != 0) {
+            swap(twinBlocks, 0, 0, 1);
+        }
+        if (blocks[0][0] != 0 && blocks[0][2] != 0) {
+            swap(twinBlocks, 0, 0, 2);
+        }
+        return new Board(twinBlocks);
+    }
+
+    private void swap(int[][] array, int i, int j, int k) {
+        int temp = array[i][j];
+        array[i][j] = array[i][k];
+        array[i][k] = temp;
+    }
 
     @Override
     public boolean equals(Object other) {
@@ -77,7 +96,7 @@ public class Board {
         if (other == null) return false;
         if (other.getClass() != this.getClass()) return false;
         Board that = (Board) other;
-        return that.toString() == this.toString();
+        return that.toString().equals(this.toString());
     }
 
 //    public Iterable<Board> neighbors()     // all neighboring boards
@@ -93,7 +112,4 @@ public class Board {
         }
         return s.toString();
     }
-
-
-//    public static void main(String[] args) // unit tests (not graded)
 }

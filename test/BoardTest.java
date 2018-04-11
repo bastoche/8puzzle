@@ -63,7 +63,7 @@ class BoardTest {
     @Test
     void equals__true() {
         Board board = makeEmptyBoard(3);
-        assertFalse(board.equals(makeEmptyBoard(3)));
+        assertTrue(board.equals(makeEmptyBoard(3)));
     }
 
     @Test
@@ -82,6 +82,14 @@ class BoardTest {
         int[] elements = {8, 1, 3, 4, 0, 2, 7, 6, 5};
         Board board = makeBoard(3, elements);
         assertEquals(10, board.manhattan());
+    }
+
+    @Test
+    void twin() {
+        Board board = makeGoalBoard();
+        assertFalse(board.twin().equals(makeEmptyBoard(3)));
+        assertFalse(board.twin().equals(board));
+        assertFalse(board.twin().isGoal());
     }
 
 }
