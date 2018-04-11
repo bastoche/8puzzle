@@ -15,6 +15,7 @@ public class Solver {
         final Board board;
         final int moves;
         final SearchNode previousNode;
+        final int manhattan;
 
         SearchNode(Board board, SearchNode previousNode) {
             this.board = board;
@@ -24,6 +25,7 @@ public class Solver {
             } else {
                 moves = previousNode.moves + 1;
             }
+            manhattan = board.manhattan();
         }
 
         SearchNode(Board board) {
@@ -46,7 +48,7 @@ public class Solver {
     }
 
     private MinPQ<SearchNode> initializePriorityQueue(Board board) {
-        MinPQ<SearchNode> priorityQueue = new MinPQ<>(Comparator.comparingInt(node -> node.moves + node.board.manhattan()));
+        MinPQ<SearchNode> priorityQueue = new MinPQ<>(Comparator.comparingInt(node -> node.moves + node.manhattan));
         SearchNode initialNode = new SearchNode(board);
         priorityQueue.insert(initialNode);
         return priorityQueue;
