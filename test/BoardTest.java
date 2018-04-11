@@ -1,8 +1,14 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.Iterator;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
+
+    Board makeEmptyBoard() {
+        return makeEmptyBoard(3);
+    }
 
     Board makeEmptyBoard(int size) {
         int[] elements = {};
@@ -40,7 +46,7 @@ class BoardTest {
 
     @Test
     void isGoal__false() {
-        Board board = makeEmptyBoard(3);
+        Board board = makeEmptyBoard();
         assertFalse(board.isGoal());
     }
 
@@ -90,6 +96,25 @@ class BoardTest {
         assertFalse(board.twin().equals(makeEmptyBoard(3)));
         assertFalse(board.twin().equals(board));
         assertFalse(board.twin().isGoal());
+    }
+
+    private static <T> int size(Iterable<T> iterable) {
+        int count = 0;
+        Iterator iterator = iterable.iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
+            count++;
+        }
+        return count;
+    }
+
+    @Test
+    void neighbors() {
+        assertEquals(2, size(makeGoalBoard().neighbors()));
+
+        int[] elements = {1, 2, 3, 4, 0, 5, 6, 7, 8};
+        Board board = makeBoard(3, elements);
+        assertEquals(4, size(board.neighbors()));
     }
 
 }

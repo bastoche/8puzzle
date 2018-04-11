@@ -1,4 +1,4 @@
-import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.Stack;
 
 public class Board {
 
@@ -49,8 +49,8 @@ public class Board {
     }
 
     private int manhattan(int value, int i, int j) {
-        int targetI = (value  - 1) / 3;
-        int targetJ = (value  - 1) % 3;
+        int targetI = (value - 1) / 3;
+        int targetJ = (value - 1) % 3;
         return Math.abs(i - targetI) + Math.abs(j - targetJ);
     }
 
@@ -76,18 +76,18 @@ public class Board {
         int[][] twinBlocks = new int[size][size];
         copy(blocks, twinBlocks, size);
         if (blocks[0][0] != 0 && blocks[0][1] != 0) {
-            swap(twinBlocks, 0, 0, 1);
+            swap(twinBlocks, 0, 0, 0, 1);
         }
         if (blocks[0][0] != 0 && blocks[0][2] != 0) {
-            swap(twinBlocks, 0, 0, 2);
+            swap(twinBlocks, 0, 0, 0, 2);
         }
         return new Board(twinBlocks);
     }
 
-    private void swap(int[][] array, int i, int j, int k) {
-        int temp = array[i][j];
-        array[i][j] = array[i][k];
-        array[i][k] = temp;
+    private void swap(int[][] array, int i1, int j1, int i2, int j2) {
+        int temp = array[i1][j1];
+        array[i1][j1] = array[i2][j2];
+        array[i2][j2] = temp;
     }
 
     @Override
@@ -99,7 +99,57 @@ public class Board {
         return that.toString().equals(this.toString());
     }
 
-//    public Iterable<Board> neighbors()     // all neighboring boards
+    private enum Move {
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN
+    }
+
+    private Board makeNeighborBoard(Move move, int blankRow, int blankCol) {
+        int[][] neighborBlocks = new int[size][size];
+        copy(blocks, neighborBlocks, size);
+        switch (move) {
+            case LEFT:
+                if (blankCol == size - 1) return null;
+                swap(neighborBlocks, blankRow, blankCol, blankRow, blankCol + 1);
+                break;
+            case RIGHT:
+                if (blankCol == 0) return null;
+                swap(neighborBlocks, blankRow, blankCol, blankRow, blankCol - 1);
+                break;
+            case UP:
+                if (blankRow == size - 1) return null;
+                swap(neighborBlocks, blankRow, blankCol, blankRow + 1, blankCol);
+                break;
+            case DOWN:
+                if (blankRow == 0) return null;
+                swap(neighborBlocks, blankRow, blankCol, blankRow - 1, blankCol);
+                break;
+        }
+        return new Board(neighborBlocks);
+    }
+
+    public Iterable<Board> neighbors() {
+        Stack<Board> result = new Stack<>();
+        int blankRow = 0;
+        int blankCol = 0;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (blocks[i][j] == 0) {
+                    blankRow = i;
+                    blankCol = j;
+                }
+            }
+        }
+        for (Move move : Move.values()) {
+            Board board = makeNeighborBoard(move, blankRow, blankCol);
+            if (board != null) {
+                result.push(board);
+            }
+        }
+        return result;
+    }
 
     public String toString() {
         StringBuilder s = new StringBuilder();
