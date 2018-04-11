@@ -75,4 +75,13 @@ class BoardTest {
         assertEquals(5, board.hamming());
     }
 
+    @Test
+    void manhattan() {
+        assertEquals(0, makeGoalBoard().manhattan());
+
+        int[] elements = {8, 1, 3, 4, 0, 2, 7, 6, 5};
+        Board board = makeBoard(3, elements);
+        assertEquals(10, board.manhattan());
+    }
+
 }

@@ -1,3 +1,5 @@
+import edu.princeton.cs.algs4.StdOut;
+
 public class Board {
 
 
@@ -31,7 +33,23 @@ public class Board {
         return result;
     }
 
-//    public int manhattan()                 // sum of Manhattan distances between blocks and goal
+    public int manhattan() {
+        int result = 0;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (blocks[i][j] != 0) {
+                    result += manhattan(blocks[i][j], i, j);
+                }
+            }
+        }
+        return result;
+    }
+
+    private int manhattan(int value, int i, int j) {
+        int targetI = (value  - 1) / 3;
+        int targetJ = (value  - 1) % 3;
+        return Math.abs(i - targetI) + Math.abs(j - targetJ);
+    }
 
     public boolean isGoal() {
         for (int i = 0; i < size; i++) {
