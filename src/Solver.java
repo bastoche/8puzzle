@@ -7,8 +7,6 @@ import java.util.Comparator;
 
 public class Solver {
 
-    private final Board initialBoard;
-
     private boolean isSolvable;
     private int moves;
     private final Stack<Board> solution;
@@ -38,34 +36,52 @@ public class Solver {
             throw new IllegalArgumentException();
         }
 
-        initialBoard = initial;
         isSolvable = false;
         solution = new Stack<>();
 
-        MinPQ<SearchNode> priorityQueue = new MinPQ<>(Comparator.comparingInt(node -> node.moves + node.board.manhattan()));
-        SearchNode initialNode = new SearchNode(initialBoard);
-        priorityQueue.insert(initialNode);
+        MinPQ<SearchNode> priorityQueue = initializePriorityQueue(initial);
+        MinPQ<SearchNode> twinPriorityQueue = initializePriorityQueue(initial.twin());
 
-        findSolution(priorityQueue);
+        findSolution(priorityQueue, twinPriorityQueue);
     }
 
-    private void findSolution(MinPQ<SearchNode> priorityQueue) {
-        while (!priorityQueue.isEmpty()) {
-            SearchNode node = priorityQueue.delMin();
-            if (node.board.isGoal()) {
+    private MinPQ<SearchNode> initializePriorityQueue(Board board) {
+        MinPQ<SearchNode> priorityQueue = new MinPQ<>(Comparator.comparingInt(node -> node.moves + node.board.manhattan()));
+        SearchNode initialNode = new SearchNode(board);
+        priorityQueue.insert(initialNode);
+        return priorityQueue;
+    }
+
+
+    private void findSolution(MinPQ<SearchNode> priorityQueue, MinPQ<SearchNode> twinPriorityQueue) {
+        while (!priorityQueue.isEmpty() && !twinPriorityQueue.isEmpty()) {
+            SearchNode node = findSolution(priorityQueue);
+            if (node != null) {
                 isSolvable = true;
                 moves = node.moves;
                 buildSolution(node);
                 break;
-            } else {
-                Iterable<Board> neighbors = node.board.neighbors();
-                for (Board neighbor : neighbors) {
-                    if (node.previousNode == null || !node.previousNode.board.equals(neighbor)) {
-                        priorityQueue.insert(new SearchNode(neighbor, node));
-                    }
-                }
+            }
+
+            if (findSolution(twinPriorityQueue) != null) {
+                break;
             }
         }
+    }
+
+    private SearchNode findSolution(MinPQ<SearchNode> priorityQueue) {
+        SearchNode node = priorityQueue.delMin();
+        if (node.board.isGoal()) {
+            return node;
+        }
+
+        Iterable<Board> neighbors = node.board.neighbors();
+        for (Board neighbor : neighbors) {
+            if (node.previousNode == null || !node.previousNode.board.equals(neighbor)) {
+                priorityQueue.insert(new SearchNode(neighbor, node));
+            }
+        }
+        return null;
     }
 
     private void buildSolution(SearchNode node) {

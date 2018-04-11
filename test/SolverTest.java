@@ -24,7 +24,6 @@ class SolverTest {
     }
 
     @Test
-    @Disabled()
     void isSolvable_false() {
         Solver solver = new Solver(makeUnsolvableBoard());
         assertFalse(solver.isSolvable());
@@ -45,7 +44,6 @@ class SolverTest {
     }
 
     @Test
-    @Disabled()
     void moves_unsolvable() {
         Solver solver = new Solver(makeUnsolvableBoard());
         assertEquals(-1, solver.moves());
@@ -59,7 +57,6 @@ class SolverTest {
     }
 
     @Test
-    @Disabled()
     void solution_unsolvable() {
         Solver solver = new Solver(makeUnsolvableBoard());
         assertNull(solver.solution());

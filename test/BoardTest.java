@@ -1,7 +1,5 @@
 import org.junit.jupiter.api.Test;
 
-import java.util.Iterator;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
@@ -23,7 +21,7 @@ class BoardTest {
     public static Board makeBoard(int size, int[] elements) {
         int[][] blocks = new int[size][size];
         for (int i = 0; i < elements.length; ++i) {
-            blocks[i / 3][i % 3] = elements[i];
+            blocks[i / size][i % size] = elements[i];
         }
         return new Board(blocks);
     }
@@ -82,9 +80,19 @@ class BoardTest {
     }
 
     @Test
-    void manhattan() {
+    void manhattan__0() {
         assertEquals(0, makeGoalBoard().manhattan());
+    }
 
+    @Test
+    void manhattan__3() {
+        int[] elements = {1, 0, 2, 3};
+        Board board = makeBoard(2, elements);
+        assertEquals(3, board.manhattan());
+    }
+
+    @Test
+    void manhattan__10() {
         int[] elements = {8, 1, 3, 4, 0, 2, 7, 6, 5};
         Board board = makeBoard(3, elements);
         assertEquals(10, board.manhattan());

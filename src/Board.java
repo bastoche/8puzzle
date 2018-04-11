@@ -55,8 +55,8 @@ public class Board {
     }
 
     private int manhattan(int value, int i, int j) {
-        int targetI = (value - 1) / 3;
-        int targetJ = (value - 1) % 3;
+        int targetI = (value - 1) / size;
+        int targetJ = (value - 1) % size;
         return Math.abs(i - targetI) + Math.abs(j - targetJ);
     }
 
@@ -84,8 +84,8 @@ public class Board {
         if (blocks[0][0] != 0 && blocks[0][1] != 0) {
             swap(twinBlocks, 0, 0, 0, 1);
         }
-        if (blocks[0][0] != 0 && blocks[0][2] != 0) {
-            swap(twinBlocks, 0, 0, 0, 2);
+        else if (blocks[1][0] != 0 && blocks[1][1] != 0) {
+            swap(twinBlocks, 1, 0, 1, 1);
         }
         return new Board(twinBlocks);
     }
