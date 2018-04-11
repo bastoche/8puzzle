@@ -13,9 +13,12 @@ public class Board {
                 this.blocks[i][j] = blocks[i][j];
             }
         }
-    }           // construct a board from an n-by-n array of blocks
-    // (where blocks[i][j] = block in row i, column j)
-//    public int dimension()                 // board dimension n
+    }
+
+    public int dimension() {
+        return size;
+    }
+
 //    public int hamming()                   // number of blocks out of place
 //    public int manhattan()                 // sum of Manhattan distances between blocks and goal
 //    public boolean isGoal()                // is this board the goal board?

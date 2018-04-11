@@ -14,4 +14,12 @@ class BoardTest {
                 " 0  0  0 \n", board.toString());
     }
 
+    @Test
+    void dimension() {
+        int[][] blocks = new int[3][3];
+        Board board = new Board(blocks);
+        assertEquals(3, board.dimension());
+    }
+
+
 }
